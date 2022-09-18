@@ -4,12 +4,12 @@ import arrow
 
 class Config(object):
     DEBUG = False
-    # DATABASE_URI=mysql+pymysql://database_user:database_password@database_address/database_name
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')
+    #DATABASE_URI='mysql+pymysql://uCourse:uCourse@127.0.0.1:3306/timetable'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://root:Taylorswift@127.0.0.1:3306/timetable'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Default url for timetabling service
-    BASE_URL = 'http://timetablingunnc.nottingham.ac.uk:8005/'  # Last '/' cannot be omitted
+    BASE_URL = 'http://timetablingunnc.nottingham.ac.uk:8017/'  # Last '/' cannot be omitted
     FIRST_MONDAY = arrow.get('2021-09-13')  # YYYY-MM-DD format
 
     # Default url for year1 group list
@@ -23,7 +23,7 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    BASE_URL = 'http://timetablingunnc.nottingham.ac.uk:8005/'
+    BASE_URL = 'http://timetablingunnc.nottingham.ac.uk:8017/'
 
 
 class DevelopmentConfig(Config):

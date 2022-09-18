@@ -17,7 +17,6 @@ from nottingtable.crawler.individual import generate_ics as get_ics_individual
 from nottingtable.crawler.plans import get_plan_textspreadsheet
 from nottingtable.crawler.plans import generate_ics as get_ics
 from nottingtable.crawler.staff import get_staff_timetable
-from nottingtable.crawler.hexid import get_hex_id
 from nottingtable.crawler.models import User
 from nottingtable.crawler.models import Course
 from nottingtable.crawler.models import Y1Group
@@ -151,7 +150,6 @@ def filter_semester(semester, record):
 
 @bp.route('/individual/<format_type>', methods=('GET',))
 def get_individual_data(format_type):
-    is_hex = False
     is_year1 = False
     if format_type != 'json' and format_type != 'ical':
         return jsonify(error='Not Found'), 404
@@ -162,7 +160,6 @@ def get_individual_data(format_type):
         is_year1 = True
     elif request.args.get('hex'):
         student_id = request.args.get('hex')
-        is_hex = True
     else:
         return jsonify(error='Student ID or Group Name or Hex Not Provided'), 400
 
@@ -171,15 +168,13 @@ def get_individual_data(format_type):
 
     force_refresh = request.args.get('force-refresh') or 0
 
-    student_hex_id = student_id if (is_year1 or is_hex) else get_hex_id(student_id)
-
     semester = request.args.get('semester') or get_current_semester()
     if semester != 1 and semester != 2 and semester != 3:
         semester = get_current_semester()
 
     try:
         student_record = get_record(student_id, force_refresh,
-                                    get_individual_timetable, {'student_id': student_hex_id, 'is_year1': is_year1})
+                                    get_individual_timetable, {'student_id': student_id, 'is_year1': is_year1})
     except (NameError, AttributeError):
         return jsonify(error='Student ID/Group Not Found'), 404
 

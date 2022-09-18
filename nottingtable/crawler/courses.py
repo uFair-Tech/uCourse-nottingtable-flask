@@ -49,17 +49,18 @@ def get_department_courses(url, dept_id, dept_name):
     :param dept_name: department name str
     :return: department collection status string
     """
-    exec_dept_list = ['Central']
+    exec_dept_list = ['Education','Central','English','Language Centre','UNNC','Sport Department','Ningbo']
     if dept_name in exec_dept_list:
         return dept_name + ' is excluded!'
     exec_type_list = ['booking', 'wrb-web bookings', 'wrb-provisional', 'booking']
-    url = url + 'reporting/TextSpreadsheet;department;id;{}%0D%0A?days=1-7&weeks=1-52&periods=1-32' \
+    url = url + 'reporting/TextSpreadsheet;department;id;{}%0D%0A?days=1-5&weeks=1-52&periods=1-20' \
                 '&template=SWSCUST+department+TextSpreadsheet&height=100&week=100'.format(dept_id)
 
     def exclude_filter(course_dict):
         return course_dict['Name of Type'].lower() in exec_type_list
     try:
         course_list, _ = extract_text_spread_sheet(url, exclude_filter)
+        print(1)
     except NameError:
         return dept_name + ' CRAWLING FAILED !!!'
 

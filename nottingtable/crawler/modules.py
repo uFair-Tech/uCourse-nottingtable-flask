@@ -16,8 +16,8 @@ def get_module_activity(url, module_name, activity):
         raise NameError('Module Name Not Found')
 
     module_id = module.module_id
-    url = url + 'reporting/TextSpreadsheet;module;id;{}%0D%0A?days=1-7&weeks=1-52&periods=1-32&' \
-                'template=SWSCUST+module+TextSpreadsheet&height=100&week=100'.format(module_id)
+    url = url + 'reporting/TextSpreadsheet;module;id;{}%0D%0A?days=1-5&weeks=1-52&periods=1-20' \
+                '&template=SWSCUST+module+TextSpreadsheet&height=100&week=100'.format(module_id)
 
     def activity_filter(course_dict):
         return course_dict['Activity'] != activity

@@ -14,9 +14,10 @@ def extract_text_spread_sheet(url, exclude_filter):
     if resp.status_code != 200:
         raise NameError('Course not Found')
     courses = resp.text
-    courses_soup = BeautifulSoup(courses, 'lxml')
-    name = courses_soup.find('span', class_='header-5-0-0').get_text()
-    courses_tables = courses_soup.find_all(border='t')
+    courses_soup = BeautifulSoup(courses, 'html.parser')
+    name = courses_soup.find('b').get_text()
+    print(name)
+    courses_tables = courses_soup.find_all(border='1')
     fields = []
     course_list = []
     for courses_table in courses_tables:
@@ -35,6 +36,7 @@ def extract_text_spread_sheet(url, exclude_filter):
                     content = td.get_text().replace('\xa0', '').replace('  ', ' ')
                     course_info.append(content)
                 temp_dict = dict(zip(fields, course_info))
+                print(temp_dict)
                 if exclude_filter(temp_dict):
                     continue
                 course_list.append(temp_dict)

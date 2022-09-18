@@ -11,8 +11,8 @@ def get_plan_textspreadsheet(url, plan_id):
     :return: a list of timetable dicts and plan name
     """
 
-    url = url + 'reporting/TextSpreadsheet;programme+of+study;id;{}%0D%0A?days=1-7&weeks=1-52' \
-                '&periods=1-32&template=SWSCUST+programme+of+study+TextSpreadsheet'.format(plan_id)
+    url = url + 'reporting/TextSpreadsheet;programme+of+study;id;{}%0D%0A?days=1-5&weeks=1-52&periods=1-20' \
+                '&template=SWSCUST+programme+of+study+TextSpreadsheet&height=100&week=100'.format(plan_id)
 
     course_list, name = extract_text_spread_sheet(url, lambda _: False)
 

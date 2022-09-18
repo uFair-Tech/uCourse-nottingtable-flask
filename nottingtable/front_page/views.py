@@ -14,7 +14,6 @@ from nottingtable.api.views import filter_semester, get_current_semester
 from nottingtable.crawler.individual import get_individual_timetable
 from nottingtable.crawler.plans import get_plan_textspreadsheet
 from nottingtable.crawler.staff import get_staff_timetable
-from nottingtable.crawler.hexid import get_hex_id
 from nottingtable.crawler.models import Y1Group
 from nottingtable.crawler.models import MasterPlan
 
