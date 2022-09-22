@@ -10,11 +10,11 @@ class Config(object):
 
     # Default url for timetabling service
     BASE_URL = 'http://timetablingunnc.nottingham.ac.uk:8017/'  # Last '/' cannot be omitted
-    FIRST_MONDAY = arrow.get('2021-09-13')  # YYYY-MM-DD format
+    FIRST_MONDAY = arrow.get('2022-09-12')  # YYYY-MM-DD format
 
     # Default url for year1 group list
-    YEAR1_PDF_URL = 'https://www.nottingham.edu.cn/en/academicservices/documents/2020-2021-s2-year-1-student-timetable.pdf'
-
+    #YEAR1_PDF_URL = 'https://www.nottingham.edu.cn/en/academicservices/documents/2020-2021-s2-year-1-student-timetable.pdf'
+    YEAR1_PDF_URL = 'https://www.nottingham.edu.cn/en/academicservices/documents/year-1-student-timetable-2022-23-autumn-semester-0916v2.pdf'
     # integer, the cache lifetime in database, unit: day
     CACHE_LIFE = 365
 
