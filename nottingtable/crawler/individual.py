@@ -37,7 +37,6 @@ def validate_student_id(student_id, is_year1=False):
             return True
 
 
-
 def validate_hex_id(hex_id):
     """
     Get and verify hex id
@@ -72,27 +71,35 @@ def get_individual_timetable(url,student_id, is_year1=False):
     :return: timetable dict for the student
     """
 
+
     # 实现无可视化界面的操作
     chrome_options = Options()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-gpu')
+    chrome_options.page_load_strategy = 'eager'
 
     # 实现规避检测
     option = ChromeOptions()
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
 
 
+
+
     # 实现让selenium规避被检测到的风险
     driver = webdriver.Chrome(executable_path='/Users/mayuhao/uCourse-nottingtable-flask/venv/lib/python3.10/site-packages/chromedriver',chrome_options=chrome_options,options=option)
 
+
+
     driver.get("https://unnc-sws-ad.scientia.com.cn/TCS/view")
     input = driver.find_element(By.ID,'i0116')
-    input.send_keys('scyym4@nottingham.edu.cn')
+    #input email
+    input.send_keys('UNNC_email')
     button1 = driver.find_element(By.ID,'idSIButton9')
     button1.click()
-    sleep(5)
+    sleep(4)
     pw = driver.find_element(By.ID,'passwordInput')
-    pw.send_keys('Taylorswift0307?')
+    #inuput password
+    pw.send_keys('Password')
     button2 = driver.find_element(By.ID,'submitButton')
     button2.click()
     button3 = driver.find_element(By.ID,'idSIButton9')
@@ -119,6 +126,11 @@ def get_individual_timetable(url,student_id, is_year1=False):
         # Requests doesn't support trailers
         # 'TE': 'trailers',
     }
+
+    if is_year1:
+        student_id_1 = student_id.split('-')[1]
+        student_id_2 = student_id.split('-')[2]
+        student_id = student_id_1 + student_id_2
 
     data = {
         'identifier': student_id,
