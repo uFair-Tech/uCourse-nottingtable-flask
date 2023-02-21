@@ -15,7 +15,8 @@ from nottingtable.crawler.ics_helper import get_cal
 from nottingtable.crawler.ics_helper import add_whole_course
 from nottingtable.crawler.courses import add_course
 from nottingtable.crawler.modules import get_module_activity
-from nottingtable.crawler.models import Course
+from nottingtable.crawler.models import Course,Cookie
+
 
 
 def validate_student_id(student_id, is_year1=False):
@@ -31,9 +32,6 @@ def validate_student_id(student_id, is_year1=False):
         else:
             return True
     else:
-        if not re.match(r'Year 1-.*-\d{2}.*', student_id):
-            return False
-        else:
             return True
 
 
@@ -72,6 +70,8 @@ def get_individual_timetable(url,student_id, is_year1=False):
     """
 
 
+    """
+
     # 实现无可视化界面的操作
     chrome_options = Options()
     chrome_options.add_argument('--headless')
@@ -79,6 +79,7 @@ def get_individual_timetable(url,student_id, is_year1=False):
     chrome_options.page_load_strategy = 'eager'
 
     # 实现规避检测
+
     option = ChromeOptions()
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
 
@@ -86,20 +87,20 @@ def get_individual_timetable(url,student_id, is_year1=False):
 
 
     # 实现让selenium规避被检测到的风险
-    driver = webdriver.Chrome(executable_path='/Users/mayuhao/uCourse-nottingtable-flask/venv/lib/python3.10/site-packages/chromedriver',chrome_options=chrome_options,options=option)
+    driver = webdriver.Chrome(executable_path='/Users/mayuhao/uCourse-nottingtable-flask/venv/lib/python3.10/site-packages/chromedriver',chrome_options=chrome_options,options = option)
 
 
 
     driver.get("https://unnc-sws-ad.scientia.com.cn/TCS/view")
     input = driver.find_element(By.ID,'i0116')
     #input email
-    input.send_keys('UNNC_email')
+    input.send_keys('scyym4@nottingham.edu.cn')
     button1 = driver.find_element(By.ID,'idSIButton9')
     button1.click()
     sleep(4)
     pw = driver.find_element(By.ID,'passwordInput')
     #inuput password
-    pw.send_keys('Password')
+    pw.send_keys('Taylorswift0307<>')
     button2 = driver.find_element(By.ID,'submitButton')
     button2.click()
     button3 = driver.find_element(By.ID,'idSIButton9')
@@ -108,6 +109,10 @@ def get_individual_timetable(url,student_id, is_year1=False):
     #print(cookie['value'])
 
     driver.quit()
+    """
+
+
+    db_cookie = db.session.query(Cookie).filter_by(id=1).first()
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0) Gecko/20100101 Firefox/104.0',
@@ -117,7 +122,7 @@ def get_individual_timetable(url,student_id, is_year1=False):
         'Origin': 'https://unnc-sws-ad.scientia.com.cn',
         'Connection': 'keep-alive',
         'Referer': 'https://unnc-sws-ad.scientia.com.cn/',
-        'Cookie':'.AspNetCore.AzureADCookie='+cookie['value'],
+        'Cookie':'.AspNetCore.AzureADCookie='+db_cookie.cookie,
         'Upgrade-Insecure-Requests': '1',
         'Sec-Fetch-Dest': 'document',
         'Sec-Fetch-Mode': 'navigate',
@@ -128,27 +133,32 @@ def get_individual_timetable(url,student_id, is_year1=False):
     }
 
     if is_year1:
-        student_id_1 = student_id.split('-')[1]
-        student_id_2 = student_id.split('-')[2]
+        student_id_1 = student_id.split('-')[2]
+        student_id_2 = student_id.split('-')[3]
         student_id = student_id_1 + student_id_2
+
+    print(student_id)
 
     data = {
         'identifier': student_id,
         'style': 'Individual',
-        'weeks': '2-3;5-14',
+        'weeks': '23-35',
         'days': '1-5',
         'periods': '1-24',
     }
 
-    res = requests.post('https://unnc-sws-ad.scientia.com.cn/TCS/view', headers=headers,
+    res = requests.post('https://timetabling.nottingham.edu.cn/web/TCS/view', headers=headers,
                              data=data)
+
 
     if res.status_code != 200:
         raise NameError('Student ID Not Found.')
 
 
     soup = BeautifulSoup(res.text, 'html.parser')
-    #print(soup)
+    print(soup)
+
+
 
     name = soup.select('table table tr')[1].get_text()
     if not is_year1:

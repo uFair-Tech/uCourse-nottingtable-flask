@@ -72,6 +72,13 @@ class Y1Group(db.Model):
     def __repr__(self):
         return '<Y1 Group %r>' % self.group
 
+class Cookie(db.Model):
+    id = db.Column(db.INTEGER, primary_key=True)
+    cookie = db.Column(db.Text(5000), nullable=False)
+
+    def __repr__(self):
+        return '<Y1 Group %r>' % self.cookie
+
 
 class HexID(db.Model):
     id = db.Column(db.INTEGER, primary_key=True)

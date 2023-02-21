@@ -27,18 +27,22 @@ def create_app(development_config=True):
     # app.cli.add_command(update_hex_id)
     app.cli.add_command(update_master_plan_list)
     app.cli.add_command(update_year1_group)
+    app.cli.add_command(update_cookie)
     app.cli.add_command(update_module)
     app.cli.add_command(init_all)
 
     # apply the blueprints to the app
     from nottingtable import api
     from nottingtable import front_page
+    from nottingtable.crawler import time_request
+
 
     app.register_blueprint(front_page.bp)
     app.register_blueprint(api.bp)
 
     # make / to be handled by front_page.index
     app.add_url_rule("/", endpoint='index')
+    time_request.update_cookies(app)
 
     return app
 
@@ -78,6 +82,14 @@ def update_year1_group():
     from nottingtable.crawler import update_year1_group
     update_year1_group()
 
+@click.command("update-cookie")
+@with_appcontext
+def update_cookie():
+    """Re-get cookie"""
+    from nottingtable.crawler import update_cookie
+    update_cookie()
+
+
 
 @click.command("update-master-plans")
 @with_appcontext
@@ -110,6 +122,7 @@ def init_all():
     from nottingtable.crawler import update_course_db
     from nottingtable.crawler import update_department_list
     from nottingtable.crawler import update_year1_group
+    from nottingtable.crawler import update_cookie
     from nottingtable.crawler import update_master_plan_list
     from nottingtable.crawler import update_module_list
     from nottingtable.crawler import update_hex_id_list
@@ -119,5 +132,6 @@ def init_all():
     # Hex list is not available anymore
     # update_hex_id_list()
     update_year1_group()
+    update_cookie()
     update_master_plan_list()
     update_module_list()

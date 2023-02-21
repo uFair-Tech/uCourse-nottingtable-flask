@@ -58,6 +58,13 @@ def update_year1_group():
     db.session.commit()
     click.echo('Y1 Group List Updated!')
 
+def update_cookie():
+    from nottingtable.crawler.models import Cookie
+    Cookie.__table__.drop(db.engine)
+    Cookie.__table__.create(db.engine)
+    from nottingtable.crawler import time_request
+    time_request.initial_request_cookies()
+
 
 def update_module_list():
     """Re-get Module List"""
